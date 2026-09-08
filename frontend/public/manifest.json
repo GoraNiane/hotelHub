@@ -1,0 +1,57 @@
+{
+  "name": "Teranga Palace Hotel | Dakar",
+  "short_name": "Teranga Palace",
+  "description": "Hôtel 5 étoiles de luxe à Dakar, Sénégal. Réservation de suites, gastronomie et services d'exception.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#022C25",
+  "theme_color": "#022C25",
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "categories": ["travel", "hotel", "lifestyle", "business"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Réserver une chambre",
+      "short_name": "Réserver",
+      "description": "Consulter les disponibilités et réserver une suite",
+      "url": "/rooms",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Restaurant gastronomique",
+      "short_name": "Restaurant",
+      "description": "Découvrir la carte et les formules du restaurant",
+      "url": "/#restaurant",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mon Espace Client",
+      "short_name": "Mon Espace",
+      "description": "Accéder à vos réservations et votre profil",
+      "url": "/login",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

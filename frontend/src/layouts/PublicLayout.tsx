@@ -3,6 +3,7 @@ import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, LogOut, User as UserIcon, Hotel, Phone, MapPin, Mail, ArrowRight, Globe, Check, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { SplashScreen } from '../components/SplashScreen';
+import { InstallPwaBanner } from '../components/InstallPwaBanner';
 
 export const PublicLayout: React.FC = () => {
   const { currentUser, isAuthenticated, logout } = useAuth();
@@ -79,6 +80,9 @@ export const PublicLayout: React.FC = () => {
       
       {/* Écran de démarrage avec logo animé */}
       <SplashScreen duration={2000} />
+
+      {/* Bannière discrète d'installation PWA */}
+      <InstallPwaBanner />
 
       {/* Sticky Adaptive Navbar */}
       <header className={`sticky top-0 z-50 transition-all duration-500 ease-in-out text-white ${headerBgClass}`}>
