@@ -57,11 +57,15 @@ app.use('/api', apiRouter);
 // Global Error Handler
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`=========================================`);
-  console.log(`🏨 TERANGA PALACE HOTEL API RUNNING`);
-  console.log(`🚀 Server listening on port ${PORT}`);
-  console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
-  console.log(`=========================================`);
-});
+// Start server (only in standalone mode, not inside serverless runtime)
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`=========================================`);
+    console.log(`🏨 TERANGA PALACE HOTEL API RUNNING`);
+    console.log(`🚀 Server listening on port ${PORT}`);
+    console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
+    console.log(`=========================================`);
+  });
+}
+
+export default app;
