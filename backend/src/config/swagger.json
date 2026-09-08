@@ -1,0 +1,119 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Teranga Palace Hotel API",
+    "version": "1.0.0",
+    "description": "Documentation de l'API REST pour la gestion et les réservations du Teranga Palace Hotel."
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Serveur API Local (Proxy ou direct)"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Créer un compte client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": { "type": "string" },
+                  "lastName": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "phone": { "type": "string" }
+                },
+                "required": ["firstName", "lastName", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Compte créé." },
+          "400": { "description": "Données incorrectes ou email déjà utilisé." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authentifier un utilisateur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Succès, retourne le JWT et les données de l'utilisateur." },
+          "401": { "description": "Identifiants invalides." }
+        }
+      }
+    },
+    "/rooms": {
+      "get": {
+        "summary": "Lister les chambres",
+        "parameters": [
+          { "name": "roomType", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Liste des chambres." }
+        }
+      }
+    },
+    "/rooms/available": {
+      "get": {
+        "summary": "Rechercher les disponibilités des chambres",
+        "parameters": [
+          { "name": "checkIn", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "checkOut", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "guests", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Liste des chambres disponibles." }
+        }
+      }
+    },
+    "/reservations": {
+      "post": {
+        "summary": "Créer une réservation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roomId": { "type": "string" },
+                  "checkInStr": { "type": "string" },
+                  "checkOutStr": { "type": "string" },
+                  "adults": { "type": "integer" },
+                  "children": { "type": "integer" },
+                  "promotionCode": { "type": "string" }
+                },
+                "required": ["roomId", "checkInStr", "checkOutStr", "adults"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Réservation enregistrée." }
+        }
+      }
+    }
+  }
+}

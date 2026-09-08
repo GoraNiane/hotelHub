@@ -1,0 +1,195 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CLIENT
+  RECEPTIONIST
+  ADMIN
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  CLEANING
+  MAINTENANCE
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+enum PaymentMethod {
+  CASH
+  WAVE
+  ORANGE_MONEY
+  CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+model User {
+  id            String         @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String         @unique
+  password      String
+  phone         String?
+  role          Role           @default(CLIENT)
+  enabled       Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  reservations  Reservation[]
+  reviews       Review[]
+  notifications Notification[]
+}
+
+model RoomType {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String   @db.Text
+  price       Float
+  capacity    Int
+  size        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  rooms       Room[]
+}
+
+model Room {
+  id            String        @id @default(uuid())
+  roomNumber    String        @unique
+  name          String
+  description   String        @db.Text
+  pricePerNight Float
+  capacity      Int
+  size          Int
+  status        RoomStatus    @default(AVAILABLE)
+  roomTypeId    String
+  roomType      RoomType      @relation(fields: [roomTypeId], references: [id])
+  images        RoomImage[]
+  reservations  Reservation[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model RoomImage {
+  id        String   @id @default(uuid())
+  url       String
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Reservation {
+  id                String            @id @default(uuid())
+  reservationNumber String            @unique
+  userId            String
+  user              User              @relation(fields: [userId], references: [id])
+  roomId            String
+  room              Room              @relation(fields: [roomId], references: [id])
+  checkIn           DateTime
+  checkOut          DateTime
+  adults            Int
+  children          Int               @default(0)
+  numberOfNights    Int
+  totalPrice        Float
+  status            ReservationStatus @default(PENDING)
+  promotionId       String?
+  promotion         Promotion?        @relation(fields: [promotionId], references: [id])
+  payments          Payment[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model Payment {
+  id                   String        @id @default(uuid())
+  reservationId        String
+  reservation          Reservation   @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  amount               Float
+  paymentMethod        PaymentMethod
+  status               PaymentStatus @default(PENDING)
+  transactionReference String?       @unique
+  paidAt               DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String   @db.Text
+  price       Float
+  icon        String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Promotion {
+  id            String        @id @default(uuid())
+  code          String        @unique
+  discountType  DiscountType
+  discountValue Float
+  startDate     DateTime
+  endDate       DateTime
+  maxUses       Int           @default(100)
+  currentUses   Int           @default(0)
+  active        Boolean       @default(true)
+  reservations  Reservation[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  roomName  String
+  rating    Int
+  comment   String   @db.Text
+  approved  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Hotel {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  address     String
+  phone       String
+  email       String
+  stars       Int      @default(4)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  read      Boolean  @default(false)
+  type      String   @default("INFO") // INFO, SUCCESS, WARNING, ERROR
+  createdAt DateTime @default(now())
+}
